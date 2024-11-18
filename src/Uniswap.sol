@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
-import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "../lib/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
+import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
+import "../lib/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
+import "./interface/IERC20.sol";
 
 contract UniswapIntegration {
     IUniswapV2Router02 public uniswapRouter;
@@ -26,11 +26,9 @@ contract UniswapIntegration {
         address to,
         uint deadline
     ) external returns (uint[] memory amounts) {
-        // Transfer tokens to the contract before swapping
         require(IERC20(path[0]).transferFrom(msg.sender, address(this), amountIn), "Transfer of token failed");
         IERC20(path[0]).approve(address(uniswapRouter), amountIn);
 
-        // Perform the swap
         return uniswapRouter.swapExactTokensForTokens(amountIn, amountOutMin, path, to, deadline);
     }
 
@@ -44,7 +42,6 @@ contract UniswapIntegration {
         uint amountBMin,
         uint deadline
     ) external {
-        // Transfer tokens to the contract before adding liquidity
         IERC20(tokenA).transferFrom(msg.sender, address(this), amountA);
         IERC20(tokenB).transferFrom(msg.sender, address(this), amountB);
 
