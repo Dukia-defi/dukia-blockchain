@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.27;
 
-import {Script, console} from "../lib/forge-std/src/Script.sol";
+import {Script, console} from "forge-std/Script.sol";
 import {AaveInteraction} from "../src/Aave.sol";
 import "../src/interface/IERC20.sol";
 
