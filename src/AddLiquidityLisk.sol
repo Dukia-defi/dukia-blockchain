@@ -22,6 +22,7 @@ contract UniswapTest {
     address userAddr = msg.sender;
     uint32 chainId = 11155111;  // Sepolia chain ID
     address target = 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3;  // Uniswap Router address on Sepolia
+    address public liskCCM = SharedData.LISK_SEPOLIA_CCM;
 
     // Token addresses on Sepolia
     address constant USDC = 0x7Fc21ceb0C5003576ab5E101eB240c2b822c95d2;
@@ -46,12 +47,14 @@ contract UniswapTest {
             block.timestamp + 15
         );
 
-        CrossChainMessenger.Dispatcher(address(this)).dispatch(
-            userAddr,
-            chainId,
-            message,
-            target
-        );
+        // CrossChainMessenger.Dispatcher(address(this)).dispatch(
+        //     userAddr,
+        //     chainId,
+        //     message,
+        //     target
+        // );
+
+         CrossChainMessenger(liskCCM).sendMessage(userAddr, chainId, message,target);
     }
 
 }
