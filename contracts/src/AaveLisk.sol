@@ -18,8 +18,16 @@ import {CrossChainMessenger} from "./utils/CrossChainMessenger.sol";
 contract AaveTest {
     address userAddr = msg.sender;
     uint32 chainId = 11155111;
-    address target = SharedData.AAVE_SEPOLIA;
+    address immutable OWNER;
+    address public target = SharedData.AAVE_SEPOLIA; //Aave pool address
+    address public liskCCM = SharedData.LISK_SEPOLIA_CCM;
 
+    constructor() {
+        OWNER = msg.sender;
+    }
+
+    error Unathorized();
+    
     event ApproveAndSupplySuccessful(address ercTarget, uint256 value);
     event ApproveAndWithdrawSuccessful(address tokenAdress, uint256 amount);
     event BorrowSuccessful(address asset, uint256 amount);
@@ -170,5 +178,17 @@ contract AaveTest {
         withdraw(tokenAddress, amount);
 
         emit ApproveAndWithdrawSuccessful(tokenAddress, amount);
+    }
+
+    function changeTarget(address _newTarget) external {
+        if(msg.sender != OWNER) revert Unathorized();
+
+        target = _newTarget;
+    }
+
+      function changeLiskCCM(address _newLiskCCM) external {
+        if(msg.sender != OWNER) revert Unathorized();
+
+        liskCCM = _newLiskCCM;
     }
 }
