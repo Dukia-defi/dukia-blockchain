@@ -22,6 +22,9 @@ contract AaveScript is Script {
    
 
     function run() public {
+        // Get private key from environment variable
+        // uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        // address deployer = vm.addr(deployerPrivateKey);
         vm.startBroadcast();
 
         AaveInteraction hack = new AaveInteraction(0x012bAC54348C0E635dCAc9D5FB99f06F24136C9A); // deploying adding the poolprovider address 
@@ -32,7 +35,7 @@ contract AaveScript is Script {
         
         address debbb = hack.getVariableDebtTokenAddress(address(link));
        
-        /// just like allowance
+        // /// just like allowance
         IVariableDebtToken(debbb).approveDelegation(address(hack),type(uint256).max);
         
         hack.borrow(address(link), 1 ether, 2);
