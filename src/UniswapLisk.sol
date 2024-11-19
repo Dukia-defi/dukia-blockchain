@@ -21,11 +21,16 @@ import {CrossChainMessenger} from "./utils/CrossChainMessenger.sol";
 
 contract UniswapTest {
     address userAddr = msg.sender;
-    uint32 chainId = 11155111;  // Sepolia chain ID
-    address target = 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3;  // Uniswap Router address on Sepolia
+    uint32 chainId = 11155111; // Sepolia chain ID
+    address target = 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3; // Uniswap Router address on Sepolia
 
-    function swapTokensForExactTokens(uint amountIn,uint amountOutMin,address[] calldata path,address to,uint deadline) external {
-
+    function swapTokensForExactTokens(
+        uint256 amountIn,
+        uint256 amountOutMin,
+        address[] calldata path,
+        address to,
+        uint256 deadline
+    ) external {
         bytes memory message = abi.encodeWithSignature(
             "swapExactTokensForTokens(uint,uint,address[],address,uint)",
             amountIn,
@@ -35,12 +40,6 @@ contract UniswapTest {
             block.timestamp + deadline
         );
 
-        CrossChainMessenger.sendMessage(
-            userAddr,
-            chainId,
-            message,
-            target
-        );
+        CrossChainMessenger.sendMessage(userAddr, chainId, message, target);
     }
-
 }

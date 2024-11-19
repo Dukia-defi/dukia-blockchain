@@ -6,12 +6,7 @@ import "./library/SharedData.sol";
 import {CrossChainMessenger} from "./utils/CrossChainMessenger.sol";
 
 interface IAave {
-    function supply(
-        address asset,
-        uint256 amount,
-        address onBehalfOf,
-        uint16 referralCode
-    ) external;
+    function supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
 }
 
 contract AaveTest {
@@ -28,11 +23,6 @@ contract AaveTest {
             0
         );
 
-        CrossChainMessenger.Dispatcher(address(this)).dispatch(
-            userAddr,
-            chainId,
-            message,
-            target
-        );
+        CrossChainMessenger.Dispatcher(address(this)).dispatch(userAddr, chainId, message, target);
     }
 }
