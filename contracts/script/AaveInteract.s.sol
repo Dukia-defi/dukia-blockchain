@@ -30,8 +30,8 @@ contract AaveScript is Script {
         AaveInteraction hack = new AaveInteraction(0x012bAC54348C0E635dCAc9D5FB99f06F24136C9A); // deploying adding the poolprovider address 
 
         
-        dai.approve(address(hack),100 ether);
-        hack.supply(address(dai), 100 ether);
+        dai.approve(address(hack),1 ether);
+        hack.supply(address(dai), 1 ether);
         
         address debbb = hack.getVariableDebtTokenAddress(address(link));
        
@@ -46,7 +46,7 @@ contract AaveScript is Script {
 
         IAtoken(deb).approve(address(hack), type(uint256).max );
 
-        hack.withdraw(address(dai), 100 ether);
+        hack.withdraw(address(dai), 1 ether);
 
         vm.stopBroadcast();
     }

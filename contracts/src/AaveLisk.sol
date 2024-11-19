@@ -50,7 +50,7 @@ contract AaveTest {
             target
         );
 
-        emit ApproveAndSupplySuccessful(ercTarget, value);
+        emit ApproveAndSupplySuccessful(tokenAddress, amount);
     }
 
     function approveAndBorrow(address _userAddr, uint32 _chainId, address asset, uint256 amount, uint256 interestRateMode) external {
@@ -71,14 +71,14 @@ contract AaveTest {
             target
         );
 
-        emit ApproveAndBorrowSuccessful(ercTarget, value);
+        emit ApproveAndBorrowSuccessful(asset, amount);
     }
 
     function approveAndWithdraw(address _userAddr, uint32 _chainId, address contractAddress, address tokenAddress, uint256 amount) external {
         bytes memory message = abi.encodeWithSignature(
             "function approveAndWithdraw(address contractAddress, address tokenAddress, uint256 amount) external;",
             address(this),
-            asset,
+            tokenAddress,
             amount
         );
 
@@ -89,7 +89,7 @@ contract AaveTest {
             target
         );
 
-        emit ApproveAndWithdrawSuccessful(ercTarget, value);
+        emit ApproveAndWithdrawSuccessful(tokenAddress, amount);
     }
 
     function repay(address asset, uint256 amount, uint256 interestRateMode, address onBehalfOf) external {
@@ -101,7 +101,7 @@ contract AaveTest {
             msg.sender
         );
 
-        CrossChainMessenger.sendMessage(
+        CrossChainMessenger(liskCCM).sendMessage(
             userAddr,
             chainId,
             message,
