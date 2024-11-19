@@ -33,6 +33,8 @@ contract AaveScript is Script {
 
         hack.borrow(address(link), 1 ether, 2);
 
+        hack.getUserAccountData(address(msg.sender));
+
         hack.repay(address(link), 1 ether, 2);
 
         address deb = hack.getAToken(address(dai));
