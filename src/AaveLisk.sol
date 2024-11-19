@@ -40,11 +40,6 @@ contract AaveLisk {
         );
         */
 
-        CrossChainMessenger(liskCCM).sendMessage(
-            _userAddr,
-            _chainId,
-            message,
-            target
-        );
+        CrossChainMessenger(liskCCM).sendMessage(_userAddr, _chainId, message, target);
     }
 }
