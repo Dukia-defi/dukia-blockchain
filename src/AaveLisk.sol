@@ -6,12 +6,7 @@ import "./library/SharedData.sol";
 import {CrossChainMessenger} from "./utils/CrossChainMessenger.sol";
 
 interface IAave {
-    function supply(
-        address asset,
-        uint256 amount,
-        address onBehalfOf,
-        uint16 referralCode
-    ) external;
+    function supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
 }
 
 contract AaveLisk {
@@ -45,23 +40,6 @@ contract AaveLisk {
         );
         */
 
-        CrossChainMessenger(liskCCM).sendMessage(
-            _userAddr,
-            _chainId,
-            message,
-            target
-        );
-    }
-
-    function changeTarget(address _newTarget) external {
-        if(msg.sender != OWNER) revert Unathorized();
-
-        target = _newTarget;
-    }
-
-      function changeLiskCCM(address _newLiskCCM) external {
-        if(msg.sender != OWNER) revert Unathorized();
-
-        liskCCM = _newLiskCCM;
+        CrossChainMessenger(liskCCM).sendMessage(_userAddr, _chainId, message, target);
     }
 }
