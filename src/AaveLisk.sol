@@ -25,7 +25,7 @@ contract AaveLisk {
         OWNER = msg.sender;
     }
 
-    function supply(address _userAddr, uint32 _chainId, address _asset, unit256 _amount) external {
+    function supply(address _userAddr, uint32 _chainId, address _asset, uint256 _amount) external {
         //this is for the actual aave contract, this would also require the approve and transferfrom calls.
         bytes memory message = abi.encodeWithSignature(
             "function supply(address asset,uint256 amount,address onBehalfOf,uint16 referralCode) external",
