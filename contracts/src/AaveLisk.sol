@@ -27,103 +27,69 @@ contract AaveTest {
     }
 
     error Unathorized();
-    
+
     event ApproveAndSupplySuccessful(address ercTarget, uint256 value);
     event ApproveAndWithdrawSuccessful(address tokenAdress, uint256 amount);
-    event BorrowSuccessful(address asset, uint256 amount);
+    event ApproveAndBorrowSuccessful(address asset, uint256 amount);
+    event RepaySuccessful(address asset, uint256 amount);
 
-    function supply(address asset,uint256 amount) external {
+    function approveAndSupply(address _userAddr, uint32 _chainId, address tokenAddress, uint256 amount) external {
+        // require(erc20Approve(asset, amount), "approval not successful");
+        // supply(asset, amount);
         bytes memory message = abi.encodeWithSignature(
-            "function supply(address asset,uint256 amount,address onBehalfOf,uint16 referralCode) external;",
-            asset,
-            amount,
-            msg.sender,
-            0
+            "function approveAndSupply(address contractAddress, address tokenAddress, uint256 amount) external;",
+            address(this),
+            tokenAddress,
+            amount
         );
 
-        CrossChainMessenger.sendMessage(
-            userAddr,
-            chainId,
+        CrossChainMessenger(liskCCM).sendMessage(
+            _userAddr,
+            _chainId,
             message,
             target
         );
-    }
-
-    function erc20Approve(address ercTarget, uint256 value) external {
-        bytes memory message = abi.encodeWithSignature(
-            "function approve(address spender, uint256 value) external returns (bool);",
-            address(this),
-            value
-        );
-
-        CrossChainMessenger.sendMessage(
-            userAddr,
-            chainId,
-            message,
-            ercTarget
-        );
-    }
-
-    function approveAndSupply(address asset,uint256 amount) external {
-        require(erc20Approve(asset, amount), "approval not successful");
-        supply(asset, amount);
 
         emit ApproveAndSupplySuccessful(ercTarget, value);
     }
 
-    function getVariableDebtTokenAddress(address asset) external {
+    function approveAndBorrow(address _userAddr, uint32 _chainId, address asset, uint256 amount, uint256 interestRateMode) external {
+        // require(erc20Approve(asset, amount), "approval not successful");
+        // supply(asset, amount);
         bytes memory message = abi.encodeWithSignature(
-            "function getVariableDebtTokenAddress(address asset) external view returns (address);",
-            asset
-        );
-
-        bytes32 msgHash = CrossChainMessenger.sendMessage(
-            userAddr,
-            chainId,
-            message,
-            target
-        );
-    }
-
-    function approveDelegation(address delegatee) external {
-        bytes memory message = abi.encodeWithSignature(
-            "function approveDelegation(address delegatee, uint256 amount) external;",
-            delegatee,
-            type(uint256).max
-        );
-
-        CrossChainMessenger.sendMessage(
-            userAddr,
-            chainId,
-            message,
-            target // supposed to be the address gotten from the previous function I guess
-        );
-    }
-
-    function borrow(address asset, uint256 amount, uint256 interestRateMode) external {
-        bytes memory message = abi.encodeWithSignature(
-            "function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf) external;",
+            "function approveAndBorrow(address contractAddress, address asset, uint256 amount, uint256 interestRateMode) external;",
+            address(this),
             asset,
             amount,
-            interestRateMode,
-            0,
-            msg.sender
+            interestRateMode
         );
 
-        CrossChainMessenger.sendMessage(
-            userAddr,
-            chainId,
+        CrossChainMessenger(liskCCM).sendMessage(
+            _userAddr,
+            _chainId,
             message,
             target
         );
+
+        emit ApproveAndBorrowSuccessful(ercTarget, value);
     }
 
-    function approveAndBorrow(address asset, address delegatee, uint256 amount, uint256 interestRateMode) external {
-        getVariableDebtTokenAddress(asset);
-        approveDelegation(delegatee, type(uint256).max);
-        borrow(asset, amount, interestRateMode);
+    function approveAndWithdraw(address _userAddr, uint32 _chainId, address contractAddress, address tokenAddress, uint256 amount) external {
+        bytes memory message = abi.encodeWithSignature(
+            "function approveAndWithdraw(address contractAddress, address tokenAddress, uint256 amount) external;",
+            address(this),
+            asset,
+            amount
+        );
 
-        emit BorrowSuccessful(asset, amount);
+        CrossChainMessenger(liskCCM).sendMessage(
+            _userAddr,
+            _chainId,
+            message,
+            target
+        );
+
+        emit ApproveAndWithdrawSuccessful(ercTarget, value);
     }
 
     function repay(address asset, uint256 amount, uint256 interestRateMode, address onBehalfOf) external {
@@ -141,43 +107,8 @@ contract AaveTest {
             message,
             target
         );
-    }
 
-    function getAToken(address asset) external {
-        bytes memory message = abi.encodeWithSignature(
-            "function getAToken(address asset) external view returns (address)",
-            asset
-        );
-
-        CrossChainMessenger.sendMessage(
-            userAddr,
-            chainId,
-            message,
-            target
-        );
-    }
-
-    function withdraw(address tokenAddress, uint256 amount) external {
-        bytes memory message = abi.encodeWithSignature(
-            "function withdraw(address tokenAddress, uint256 amount) external view returns (address)",
-            tokenAddress,
-            amount
-        );
-
-        CrossChainMessenger.sendMessage(
-            userAddr,
-            chainId,
-            message,
-            target
-        );
-    }
-
-    function approveAndWithdraw(address tokenAddress, uint256 amount) external {
-        // address atoken = getAToken(tokenAddress);
-        require(erc20Approve(tokenAddress, amount), "approval failed");
-        withdraw(tokenAddress, amount);
-
-        emit ApproveAndWithdrawSuccessful(tokenAddress, amount);
+        emit RepaySuccessful(asset, amount);
     }
 
     function changeTarget(address _newTarget) external {
