@@ -46,12 +46,12 @@ contract UniswapTest {
             block.timestamp + 15
         );
 
-        CrossChainMessenger.Dispatcher(address(this)).dispatch(
-            userAddr,
-            chainId,
-            message,
-            target
-        );
+        // CrossChainMessenger.Dispatcher(address(this)).dispatch(
+        //     userAddr,
+        //     chainId,
+        //     message,
+        //     target
+        // );
     }
 
 }
