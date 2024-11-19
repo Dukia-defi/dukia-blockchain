@@ -14,25 +14,54 @@ interface IAave {
     ) external;
 }
 
-contract AaveTest {
-    address userAddr = msg.sender;
-    uint32 chainId = 11155111;
-    address target = SharedData.AAVE_SEPOLIA; //Aave pool address
+contract AaveLisk {
+    error Unathorized();
 
-    function supply() external {
+    address immutable OWNER;
+    address public target = SharedData.AAVE_SEPOLIA; //Aave pool address
+    address public liskCCM = SharedData.LISK_SEPOLIA_CCM;
+
+    constructor() {
+        OWNER = msg.sender;
+    }
+
+    function supply(address _userAddr, uint32 _chainId, address _asset, unit256 _amount) external {
+        //this is for the actual aave contract, this would also require the approve and transferfrom calls.
         bytes memory message = abi.encodeWithSignature(
-            "function supply(address asset,uint256 amount,address onBehalfOf,uint16 referralCode) external;",
-            address(0),
-            100,
-            msg.sender,
+            "function supply(address asset,uint256 amount,address onBehalfOf,uint16 referralCode) external",
+            _asset,
+            _amount,
+            _userAddr,
             0
         );
 
-        CrossChainMessenger.Dispatcher(address(this)).dispatch(
-            userAddr,
-            chainId,
+        //this is for the new aave interaction contract...choose the one guys intend to interact with
+
+        /*
+        bytes memory message = abi.encodeWithSignature(
+            "function supply(address tokenAddress, uint256 amount) external",
+            _asset,
+            _amount,
+        );
+        */
+
+        CrossChainMessenger(liskCCM).sendMessage(
+            _userAddr,
+            _chainId,
             message,
             target
         );
+    }
+
+    function changeTarget(address _newTarget) external {
+        if(msg.sender != OWNER) revert Unathorized();
+
+        target = _newTarget;
+    }
+
+      function changeLiskCCM(address _newLiskCCM) external {
+        if(msg.sender != OWNER) revert Unathorized();
+
+        liskCCM = _newLiskCCM;
     }
 }
