@@ -2,7 +2,7 @@
 pragma solidity 0.8.27;
 
 import {Script, console} from "forge-std/Script.sol";
-import {AaveInteraction} from "../src/Aave.sol";
+import {AaveInteraction} from "../src/AaveInteraction.sol";
 import "../src/interface/IERC20.sol";
 
 
