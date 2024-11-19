@@ -24,6 +24,20 @@ contract AaveInteraction {
         owner = msg.sender;
     }
 
+
+       //To get user account data eg ltv, health factor, the borrowing power, etc
+
+    function getUserAccountData(address user) public view returns ( uint256 totalCollateralBase,
+            uint256 totalDebtBase,
+            uint256 availableBorrowsBase,
+            uint256 currentLiquidationThreshold,
+            uint256 ltv,
+            uint256 healthFactor) {
+        return pool.getUserAccountData(user);
+        
+        
+    }
+
     function getVariableDebtTokenAddress(address asset) public view returns (address) {
         DataTypes.ReserveData memory reserveData = pool.getReserveData(asset);
         return reserveData.variableDebtTokenAddress;
