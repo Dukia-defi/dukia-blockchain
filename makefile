@@ -9,6 +9,9 @@ hack:
 hack2:    
 	@forge script script/AaveInteract.s.sol:AaveScript --rpc-url $(SEPOLIA_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast -- --vvvvv --gas-price 6000000000
 
+hackLisk:    
+	@forge script script/AaveLiskInteract.s.sol:AaveLiskInteract --rpc-url $(LISK_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast -- --vvvvv --gas-price 6000000000
+
 deploy-create:
 	@forge create src/Counter.sol:HackScript --rpc-url $(SEPOLIA_RPC_URL) --private-key $(PRIVATE_KEY) --etherscan-api-key $(ETHERSCAN_API_KEY) --verify 
 

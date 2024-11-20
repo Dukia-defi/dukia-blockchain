@@ -15,7 +15,7 @@ import {CrossChainMessenger} from "./utils/CrossChainMessenger.sol";
 //     ) external;
 // }
 
-contract AaveTest {
+contract AaveLisk {
     address userAddr = msg.sender;
     uint32 chainId = 11155111;
     address immutable OWNER;
