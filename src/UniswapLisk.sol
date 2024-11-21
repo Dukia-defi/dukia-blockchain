@@ -1,28 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-// import "./interface/IPool.sol";
-// import "./library/SharedData.sol";
+import "./library/SharedData.sol";
 import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import {CrossChainMessenger} from "./utils/CrossChainMessenger.sol";
 
-// interface IUniswapV2Router {
-//     function addLiquidity(
-//         address tokenA,
-//         address tokenB,
-//         uint amountADesired,
-//         uint amountBDesired,
-//         uint amountAMin,
-//         uint amountBMin,
-//         address to,
-//         uint deadline
-//     ) external returns (uint amountA, uint amountB, uint liquidity);
-// }
-
 contract UniswapTest {
     address userAddr = msg.sender;
+    address public immutable owner;
     uint32 chainId = 11155111; // Sepolia chain ID
-    address target = 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3; // Uniswap Router address on Sepolia
+    address target = SharedData.UNISWAP_SEPOLIA; // Uniswap Router address on Sepolia
+    address public liskCCM = SharedData.LISK_SEPOLIA_CCM;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    error Unathorized();
 
     function swapTokensForExactTokens(
         uint256 amountIn,
@@ -40,6 +34,20 @@ contract UniswapTest {
             block.timestamp + deadline
         );
 
-        // CrossChainMessenger.sendMessage(userAddr, chainId, message, target);
+        CrossChainMessenger(liskCCM).sendMessage(userAddr, chainId, message, target);
+
+        emit TokensSwapped(msg.sender, amountIn, amountOutMin, path, to, deadline, amounts);
+    }
+
+    function changeTarget(address _newTarget) external {
+        if (msg.sender != owner) revert Unathorized();
+
+        target = _newTarget;
+    }
+
+    function changeLiskCCM(address _newLiskCCM) external {
+        if (msg.sender != owner) revert Unathorized();
+
+        liskCCM = _newLiskCCM;
     }
 }

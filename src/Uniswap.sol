@@ -8,13 +8,22 @@ import "./interface/IERC20.sol";
 
 contract UniswapIntegration {
     IUniswapV2Router02 public immutable uniswapRouter;
-    // IUniswapV2Factory public uniswapFactory;
+    address public owner;
 
-    // address private constant UNISWAP_ROUTER_ADDRESS = 0xB26B2De65D07eBB5E54C7F6282424D3be670E1f0;
-    // address private constant UNISWAP_FACTORY_ADDRESS = 0xF62c03E08ada871A0bEb309762E260a7a6a880E6;
+    event TokensSwapped(
+        address indexed sender,
+        uint256 amountIn,
+        uint256 amountOutMin,
+        address[] path,
+        address indexed to,
+        uint256 deadline,
+        uint256[] amounts
+    );
+    // IUniswapV2Factory public uniswapFactory;
 
     constructor(address _uniswapRouter) {
         uniswapRouter = IUniswapV2Router02(_uniswapRouter);
+        owner = msg.sender;
         // uniswapFactory = IUniswapV2Factory(UNISWAP_FACTORY_ADDRESS);
     }
 
@@ -29,7 +38,11 @@ contract UniswapIntegration {
         require(IERC20(path[0]).transferFrom(msg.sender, address(this), amountIn), "Transfer of token failed");
         IERC20(path[0]).approve(address(uniswapRouter), amountIn);
 
-        return uniswapRouter.swapExactTokensForTokens(amountIn, amountOutMin, path, to, deadline);
+        amounts = uniswapRouter.swapExactTokensForTokens(amountIn, amountOutMin, path, to, deadline);
+
+        emit TokensSwapped(msg.sender, amountIn, amountOutMin, path, to, deadline, amounts);
+
+        return amounts;
     }
 
     // // Add liquidity to a pair
