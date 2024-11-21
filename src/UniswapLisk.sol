@@ -32,6 +32,7 @@ contract UniswapTest {
             block.timestamp + deadline
         );
 
+        // CrossChainMessenger.sendMessage(userAddr, chainId, message, target);
         CrossChainMessenger(liskCCM).sendMessage(userAddr, chainId, message, target);
     }
 

@@ -7,7 +7,10 @@ hack:
 	@forge script script/hack.s.sol:HackScript --rpc-url $(SEPOLIA_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast -- --vvvvv
 
 hack2:    
-	@forge script script/AaveInteract.s.sol:AaveScript --rpc-url $(SEPOLIA_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast -- --vvvvv --etherscan-api-key $(ETHERSCAN_API_KEY) --verify 
+	@forge script script/AaveInteract.s.sol:AaveScript --rpc-url $(SEPOLIA_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast -- --vvvvv --gas-price 6000000000
+
+hackLisk:    
+	@forge script script/AaveLiskInteract.s.sol:AaveLiskInteract --rpc-url $(LISK_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast -- --vvvvv --gas-price 6000000000
 
 hack3:
 	@forge script script/AddLiquidityLisk.s.sol:AddLiquidityLiskScript --rpc-url $(LISK_RPC_URL) --private-key $(LISK_PRIVATE_KEY) --broadcast -- --vvvvv --gas-price 6000000000

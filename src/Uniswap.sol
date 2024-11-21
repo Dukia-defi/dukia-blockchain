@@ -25,15 +25,19 @@ contract UniswapIntegration {
         uint256 liquidity
     );
 
-    constructor(
-        address _routerAddress
-        // address _tokenA,
-        // address _tokenB
-    ) {
+      // Event for liquidity removal
+    event LiquidityRemoved(
+        address tokenA,
+        address tokenB,
+        uint256 amountA,
+        uint256 amountB,
+        uint256 liquidity
+    );
+
+    constructor(address _routerAddress)
+    {
         ROUTER_ADDRESS = _routerAddress;
         owner = msg.sender;
-        // tokenA = _tokenA;
-        // tokenB = _tokenB;
     }
 
 
@@ -81,24 +85,22 @@ contract UniswapIntegration {
             IERC20(tokenB).transfer(msg.sender, amountBDesired - amountB);
         }
     }
-
-// Update the event to be more generic
-event LiquidityAdded(
-    address tokenA,
-    address tokenB,
-    uint256 amountA,
-    uint256 amountB,
-    uint256 liquidity
-);
+    event LiquidityAdded(
+        address tokenA,
+        address tokenB,
+        uint256 amountA,
+        uint256 amountB,
+        uint256 liquidity
+    );
 
 
-   function addLiquidityEth(
+    function addLiquidityEth(
         address token,
         uint256 amountTokenDesired,
         uint256 amountTokenMin,
         uint256 amountETHMin,
         uint256 slippagePercent
-   ) external payable {
+    ) external payable {
         require(slippagePercent <= 1000, "Slippage too high"); // Max 10%
         require(msg.value >= amountETHMin, "Insufficient ETH sent");
 
@@ -134,6 +136,43 @@ event LiquidityAdded(
         // Transfer ETH back to sender
         payable(msg.sender).transfer(address(this).balance);
     }
+
+    function removeLiquidity(
+        address tokenA,
+        address tokenB,
+        uint256 liquidity,
+        uint256 amountAMin,
+        uint256 amountBMin,
+        uint256 slippagePercent
+    ) external {
+        require(slippagePercent <= 1000, "Slippage too high"); // Max 10%
+
+        // Get the pair address
+        address pair = IUniswapV2Factory(IUniswapV2Router02(ROUTER_ADDRESS).factory()).getPair(tokenA, tokenB);
+        require(pair != address(0), "Pair does not exist");
+
+        // Transfer liquidity tokens to the contract
+        IERC20(pair).transferFrom(msg.sender, address(this), liquidity);
+
+        // Approve the router to spend the liquidity tokens
+        IERC20(pair).approve(ROUTER_ADDRESS, liquidity);
+
+        // Remove liquidity
+        (uint256 amountA, uint256 amountB) = 
+            IUniswapV2Router02(ROUTER_ADDRESS).removeLiquidity(
+                tokenA,
+                tokenB,
+                liquidity,
+                amountAMin,
+                amountBMin,
+                msg.sender, // Send tokens to the caller
+                block.timestamp + 15
+            );
+
+        emit LiquidityRemoved(tokenA, tokenB, amountA, amountB, liquidity);
+   }
+  
+
 
 }
 

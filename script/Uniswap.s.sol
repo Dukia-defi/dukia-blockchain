@@ -53,6 +53,24 @@ contract UniswapScript is Script {
             console.log("Failed to add liquidity:", reason);
         }
 
+        address pair = IUniswapV2Factory(IUniswapV2Router02(ROUTER_ADDRESS).factory()).getPair(USDC, DAI);
+        console.log("Pairs found", pair);
+        IERC20 pairToken = IERC20(pair);
+        uint256 liquidity = pairToken.balanceOf(address(this));
+
+        try uniswapIntegration.removeLiquidity(
+            USDC, 
+            DAI, 
+            liquidity,
+            usdcAmount * 95 / 100,  // 5% slippage 
+            daiAmount * 95 / 100,   // 5% slippage
+            50  // slippage percent
+        ) {
+            console.log("Liquidity removed successfully!");
+        } catch Error(string memory reason) {
+            console.log("Failed to remove liquidity:", reason);
+        }
+
         vm.stopBroadcast();
     }
 }
