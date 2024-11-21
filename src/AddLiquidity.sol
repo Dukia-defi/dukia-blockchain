@@ -6,22 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 // import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router.sol";
 import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 
-// interface IUniswapV2Router02 {
-//     function addLiquidity(
-//         address tokenA,
-//         address tokenB,
-//         uint amountADesired,
-//         uint amountBDesired,
-//         uint amountAMin,
-//         uint amountBMin,
-//         address to,
-//         uint deadline
-//     ) external returns (uint amountA, uint amountB, uint liquidity);
 
-//     function factory() external pure returns (address);
-    
-//     function WETH() external pure returns (address);
-// }
 
 contract AddLiquidity is Ownable {
     // Uniswap V2 Router address

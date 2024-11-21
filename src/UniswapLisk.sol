@@ -4,6 +4,7 @@ pragma solidity ^0.8.26;
 // import "./interface/IPool.sol";
 // import "./library/SharedData.sol";
 import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
+import "./library/SharedData.sol";
 import {CrossChainMessenger} from "./utils/CrossChainMessenger.sol";
 
 // interface IUniswapV2Router {
@@ -23,12 +24,13 @@ contract UniswapTest {
     address userAddr = msg.sender;
     uint32 chainId = 11155111; // Sepolia chain ID
     address target = 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3; // Uniswap Router address on Sepolia
+    address public liskCCM = SharedData.LISK_SEPOLIA_CCM;
 
     function swapTokensForExactTokens(
         uint256 amountIn,
         uint256 amountOutMin,
         address[] calldata path,
-        address to,
+        // address to,
         uint256 deadline
     ) external {
         bytes memory message = abi.encodeWithSignature(
@@ -40,6 +42,9 @@ contract UniswapTest {
             block.timestamp + deadline
         );
 
-        CrossChainMessenger.sendMessage(userAddr, chainId, message, target);
+        CrossChainMessenger(liskCCM).sendMessage(userAddr, chainId, message, target);
     }
 }
+
+
+// $ forge create --rpc-url $SEPOLIA_RPC_URL --private-key $RIVATE_KEY src/AddLiquidityLisk.sol:UniswapTest
