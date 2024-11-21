@@ -1,54 +1,69 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+pragma solidity ^0.8.19;
 
-import "../lib/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-import "../lib/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
-import "./interface/IERC20.sol";
 
-contract UniswapIntegration {
-    IUniswapV2Router02 public immutable uniswapRouter;
-    // IUniswapV2Factory public uniswapFactory;
+// interface IUniswapV2Router02 {
+//     function addLiquidity(
+//         address tokenA,
+//         address tokenB,
+//         uint amountADesired,
+//         uint amountBDesired,
+//         uint amountAMin,
+//         uint amountBMin,
+//         address to,
+//         uint deadline
+//     ) external returns (uint amountA, uint amountB, uint liquidity);
 
-    // address private constant UNISWAP_ROUTER_ADDRESS = 0xB26B2De65D07eBB5E54C7F6282424D3be670E1f0;
-    // address private constant UNISWAP_FACTORY_ADDRESS = 0xF62c03E08ada871A0bEb309762E260a7a6a880E6;
-    address public immutable ROUTER_ADDRESS = 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3;
+//     function factory() external pure returns (address);
+    
+//     function WETH() external pure returns (address);
+// }
+
+contract AddLiquidity is Ownable {
+    // Uniswap V2 Router address
+    address public immutable ROUTER_ADDRESS;
     
     // Token addresses
     address public immutable USDC;
     address public immutable DAI;
-
+    
+    // Events
     event LiquidityAdded(
         uint256 usdcAmount,
         uint256 daiAmount,
         uint256 liquidity
     );
-
-
-    // constructor(address _uniswapRouter) {
-    //     uniswapRouter = IUniswapV2Router02(_uniswapRouter);
-    //     // uniswapFactory = IUniswapV2Factory(UNISWAP_FACTORY_ADDRESS);
-    // }
-
-    // Swap exact tokens for another token
-    function swapExactTokensForTokens(
-        uint256 amountIn,
-        uint256 amountOutMin,
-        address[] calldata path,
+    
+    event TokensWithdrawn(
+        address token,
         address to,
-        uint256 deadline
-    ) external returns (uint256[] memory amounts) {
-        require(IERC20(path[0]).transferFrom(msg.sender, address(this), amountIn), "Transfer of token failed");
-        IERC20(path[0]).approve(address(uniswapRouter), amountIn);
+        uint256 amount
+    );
 
-        return uniswapRouter.swapExactTokensForTokens(amountIn, amountOutMin, path, to, deadline);
+    constructor(
+        address _routerAddress,
+        address _usdc,
+        address _dai
+    ) Ownable(msg.sender) {
+        ROUTER_ADDRESS = _routerAddress;
+        USDC = _usdc;
+        DAI = _dai;
     }
 
+    /**
+     * @notice Adds liquidity to USDC-DAI pool
+     * @param usdcAmount Amount of USDC to add
+     * @param daiAmount Amount of DAI to add
+     * @param slippagePercent Maximum slippage allowed (1 = 0.01%)
+     */
     function addLiquidity(
         uint256 usdcAmount,
         uint256 daiAmount,
         uint256 slippagePercent
-    ) external  {
+    ) external onlyOwner {
         require(slippagePercent <= 1000, "Slippage too high"); // Max 10%
         
         // Transfer tokens to this contract
@@ -86,8 +101,8 @@ contract UniswapIntegration {
             IERC20(DAI).transfer(msg.sender, daiAmount - amountDAI);
         }
     }
-
-        /**
+    
+    /**
      * @notice Withdraws LP tokens to specified address
      * @param token LP token address
      * @param to Recipient address
@@ -123,5 +138,4 @@ contract UniswapIntegration {
     ) external onlyOwner {
         IERC20(token).approve(spender, amount);
     }
-
 }

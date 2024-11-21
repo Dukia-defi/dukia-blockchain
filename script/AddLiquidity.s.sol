@@ -70,3 +70,6 @@ contract AddLiquidityScript is Script {
     }
 }
 
+
+
+// forge script script/AddLiquidity.s.sol:AddLiquidityScript --fork-url $SEPOLIA_RPC_URL --broadcast
