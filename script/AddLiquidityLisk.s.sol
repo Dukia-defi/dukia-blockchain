@@ -20,7 +20,6 @@ contract AddLiquidityLiskScript is Script {
         UniswapTest uniswapTest = new UniswapTest();
         console.log("UniswapTest deployed at:", address(uniswapTest));
 
-
         // Call the `addLiquidityCrossChain` function
         uniswapTest.addLiquidity(_toChainId, usdcAmount, daiAmount, slippagePercent);
 
