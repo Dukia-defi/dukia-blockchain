@@ -17,6 +17,7 @@ contract UniswapIntegration {
     // address public immutable tokenA;
     // address public immutable tokenB;
     address public immutable WETH;
+    address public owner;
 
     event LiquidityAdded(
         uint256 usdcAmount,
@@ -30,6 +31,7 @@ contract UniswapIntegration {
         // address _tokenB
     ) {
         ROUTER_ADDRESS = _routerAddress;
+        owner = msg.sender;
         // tokenA = _tokenA;
         // tokenB = _tokenB;
     }
