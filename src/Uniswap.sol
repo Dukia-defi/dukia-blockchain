@@ -142,10 +142,9 @@ contract UniswapIntegration {
         address tokenB,
         uint256 liquidity,
         uint256 amountAMin,
-        uint256 amountBMin,
-        uint256 slippagePercent
+        uint256 amountBMin
     ) external {
-        require(slippagePercent <= 1000, "Slippage too high"); // Max 10%
+
 
         // Get the pair address
         address pair = IUniswapV2Factory(IUniswapV2Router02(ROUTER_ADDRESS).factory()).getPair(tokenA, tokenB);
@@ -173,9 +172,8 @@ contract UniswapIntegration {
    }
   
 
-
 }
-
+//url:https://sepolia.etherscan.io/address/0x9368e572ebdbb882558e9d1aa68c3bd9cf9c66a6
 
 
 

@@ -24,7 +24,8 @@ deploy-create:
 verify:
 	@forge verify-contract --chain 11155111 --rpc-url $(SEPOLIA_RPC_URL) $(CONTRACT_ADDRESS) $(CONTRACT_PATH):$(CONTRACT_NAME)
 
-
+deploy:
+	@forge create  --rpc-url $(SEPOLIA_RPC_URL) --private-key $(SEPOLIA_PRIVATE_KEY) --etherscan-api-key $(ETHERSCAN_API_KEY) --verify  src/Uniswap.sol:UniswapIntegration --constructor-args 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3
 
 # fetch-interface:
 # 	@cast interface -o src/Hack.sol addy -c 84532

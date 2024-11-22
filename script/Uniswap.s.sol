@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.26;
 
 import "forge-std/Script.sol";
 import "forge-std/console.sol";
@@ -63,8 +63,8 @@ contract UniswapScript is Script {
             DAI, 
             liquidity,
             usdcAmount * 95 / 100,  // 5% slippage 
-            daiAmount * 95 / 100,   // 5% slippage
-            50  // slippage percent
+            daiAmount * 95 / 100   // 5% slippage
+           
         ) {
             console.log("Liquidity removed successfully!");
         } catch Error(string memory reason) {
