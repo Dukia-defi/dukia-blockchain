@@ -8,38 +8,47 @@ import "../src/interface/IERC20.sol";
 
 contract UniswapIntegration {
     IUniswapV2Router02 public immutable uniswapRouter;
-    // IUniswapV2Factory public uniswapFactory;
-
-    // address private constant UNISWAP_ROUTER_ADDRESS = 0xB26B2De65D07eBB5E54C7F6282424D3be670E1f0;
-    // address private constant UNISWAP_FACTORY_ADDRESS = 0xF62c03E08ada871A0bEb309762E260a7a6a880E6;
-    address public immutable ROUTER_ADDRESS = 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3;
-    // Token addresses
-    // address public immutable tokenA;
-    // address public immutable tokenB;
     address public immutable WETH;
     address public owner;
 
-    event LiquidityAdded(
-        uint256 usdcAmount,
-        uint256 daiAmount,
-        uint256 liquidity
+    event TokensSwapped(
+        address indexed sender,
+        uint256 amountIn,
+        uint256 amountOutMin,
+        address[] path,
+        address indexed to,
+        uint256 deadline,
+        uint256[] amounts
     );
 
-      // Event for liquidity removal
-    event LiquidityRemoved(
-        address tokenA,
-        address tokenB,
-        uint256 amountA,
-        uint256 amountB,
-        uint256 liquidity
-    );
+    event LiquidityAdded(uint256 usdcAmount, uint256 daiAmount, uint256 liquidity);
 
-    constructor(address _routerAddress)
-    {
-        ROUTER_ADDRESS = _routerAddress;
+    // Event for liquidity removal
+    event LiquidityRemoved(address tokenA, address tokenB, uint256 amountA, uint256 amountB, uint256 liquidity);
+    // IUniswapV2Factory public uniswapFactory;
+
+    constructor(address _uniswapRouter) {
+        uniswapRouter = IUniswapV2Router02(_uniswapRouter);
         owner = msg.sender;
     }
 
+    // Swap exact tokens for another token
+    function swapExactTokensForTokens(
+        uint256 amountIn,
+        uint256 amountOutMin,
+        address[] calldata path,
+        address to,
+        uint256 deadline
+    ) external returns (uint256[] memory amounts) {
+        require(IERC20(path[0]).transferFrom(msg.sender, address(this), amountIn), "Transfer of token failed");
+        IERC20(path[0]).approve(address(uniswapRouter), amountIn);
+
+        amounts = uniswapRouter.swapExactTokensForTokens(amountIn, amountOutMin, path, to, deadline);
+
+        emit TokensSwapped(msg.sender, amountIn, amountOutMin, path, to, deadline, amounts);
+
+        return amounts;
+    }
 
     function addLiquidity(
         address tokenA,
@@ -59,20 +68,12 @@ contract UniswapIntegration {
         uint256 minAmountB = amountBDesired * (10000 - slippagePercent) / 10000;
 
         // Approve router
-        IERC20(tokenA).approve(ROUTER_ADDRESS, amountADesired);
-        IERC20(tokenB).approve(ROUTER_ADDRESS, amountBDesired);
+        IERC20(tokenA).approve(address(uniswapRouter), amountADesired);
+        IERC20(tokenB).approve(address(uniswapRouter), amountBDesired);
 
-       // Add liquidity
-        (uint256 amountA, uint256 amountB, uint256 liquidity) =
-        IUniswapV2Router02(ROUTER_ADDRESS).addLiquidity(
-            tokenA,
-            tokenB,
-            amountADesired,
-            amountBDesired,
-            minAmountA,
-            minAmountB,
-            address(this),
-            block.timestamp + 15
+        // Add liquidity
+        (uint256 amountA, uint256 amountB, uint256 liquidity) = uniswapRouter.addLiquidity(
+            tokenA, tokenB, amountADesired, amountBDesired, minAmountA, minAmountB, address(this), block.timestamp + 15
         );
 
         emit LiquidityAdded(tokenA, tokenB, amountA, amountB, liquidity);
@@ -85,14 +86,8 @@ contract UniswapIntegration {
             IERC20(tokenB).transfer(msg.sender, amountBDesired - amountB);
         }
     }
-    event LiquidityAdded(
-        address tokenA,
-        address tokenB,
-        uint256 amountA,
-        uint256 amountB,
-        uint256 liquidity
-    );
 
+    event LiquidityAdded(address tokenA, address tokenB, uint256 amountA, uint256 amountB, uint256 liquidity);
 
     function addLiquidityEth(
         address token,
@@ -111,20 +106,19 @@ contract UniswapIntegration {
         uint256 minAmountToken = amountTokenDesired * (10000 - slippagePercent) / 10000;
 
         // Approve router
-        IERC20(token).approve(ROUTER_ADDRESS, amountTokenDesired);
+        IERC20(token).approve(address(uniswapRouter), amountTokenDesired);
 
         // Add liquidity
-        (uint256 amountToken, uint256 amountETH, uint256 liquidity) =
-            IUniswapV2Router02(ROUTER_ADDRESS).addLiquidity(
-                token,
-                WETH,
-                amountTokenDesired,
-                msg.value,
-                minAmountToken,
-                amountETHMin,
-                address(this),
-                block.timestamp + 15
-            );
+        (uint256 amountToken, uint256 amountETH, uint256 liquidity) = uniswapRouter.addLiquidity(
+            token,
+            WETH,
+            amountTokenDesired,
+            msg.value,
+            minAmountToken,
+            amountETHMin,
+            address(this),
+            block.timestamp + 15
+        );
 
         emit LiquidityAdded(token, WETH, amountToken, amountETH, liquidity);
 
@@ -148,80 +142,69 @@ contract UniswapIntegration {
         require(slippagePercent <= 1000, "Slippage too high"); // Max 10%
 
         // Get the pair address
-        address pair = IUniswapV2Factory(IUniswapV2Router02(ROUTER_ADDRESS).factory()).getPair(tokenA, tokenB);
+        address pair = IUniswapV2Factory(uniswapRouter.factory()).getPair(tokenA, tokenB);
         require(pair != address(0), "Pair does not exist");
 
         // Transfer liquidity tokens to the contract
         IERC20(pair).transferFrom(msg.sender, address(this), liquidity);
 
         // Approve the router to spend the liquidity tokens
-        IERC20(pair).approve(ROUTER_ADDRESS, liquidity);
+        IERC20(pair).approve(address(uniswapRouter), liquidity);
 
         // Remove liquidity
-        (uint256 amountA, uint256 amountB) = 
-            IUniswapV2Router02(ROUTER_ADDRESS).removeLiquidity(
-                tokenA,
-                tokenB,
-                liquidity,
-                amountAMin,
-                amountBMin,
-                msg.sender, // Send tokens to the caller
-                block.timestamp + 15
-            );
+        (uint256 amountA, uint256 amountB) = uniswapRouter.removeLiquidity(
+            tokenA,
+            tokenB,
+            liquidity,
+            amountAMin,
+            amountBMin,
+            msg.sender, // Send tokens to the caller
+            block.timestamp + 15
+        );
 
         emit LiquidityRemoved(tokenA, tokenB, amountA, amountB, liquidity);
-   }
-  
-
-
+    }
 }
 
+// function addLiquidity(
+//     uint256 usdcAmount,
+//     uint256 daiAmount,
+//     uint256 slippagePercent
+// ) external  {
+//     require(slippagePercent <= 1000, "Slippage too high"); // Max 10%
 
+//     // Transfer tokens to this contract
+//     IERC20(USDC).transferFrom(msg.sender, address(this), usdcAmount);
+//     IERC20(DAI).transferFrom(msg.sender, address(this), daiAmount);
 
+//     // Calculate minimum amounts with slippage
+//     uint256 minUsdcAmount = usdcAmount * (10000 - slippagePercent) / 10000;
+//     uint256 minDaiAmount = daiAmount * (10000 - slippagePercent) / 10000;
 
+//     // Approve router
+//     IERC20(USDC).approve(ROUTER_ADDRESS, usdcAmount);
+//     IERC20(DAI).approve(ROUTER_ADDRESS, daiAmount);
 
+//     // Add liquidity
+//     (uint256 amountUSDC, uint256 amountDAI, uint256 liquidity) =
+//         IUniswapV2Router02(ROUTER_ADDRESS).addLiquidity(
+//             USDC,
+//             DAI,
+//             usdcAmount,
+//             daiAmount,
+//             minUsdcAmount,
+//             minDaiAmount,
+//             address(this),
+//             block.timestamp + 15
+//         );
 
+//     emit LiquidityAdded(amountUSDC, amountDAI, liquidity);
 
-
-   // function addLiquidity(
-    //     uint256 usdcAmount,
-    //     uint256 daiAmount,
-    //     uint256 slippagePercent
-    // ) external  {
-    //     require(slippagePercent <= 1000, "Slippage too high"); // Max 10%
-        
-    //     // Transfer tokens to this contract
-    //     IERC20(USDC).transferFrom(msg.sender, address(this), usdcAmount);
-    //     IERC20(DAI).transferFrom(msg.sender, address(this), daiAmount);
-        
-    //     // Calculate minimum amounts with slippage
-    //     uint256 minUsdcAmount = usdcAmount * (10000 - slippagePercent) / 10000;
-    //     uint256 minDaiAmount = daiAmount * (10000 - slippagePercent) / 10000;
-        
-    //     // Approve router
-    //     IERC20(USDC).approve(ROUTER_ADDRESS, usdcAmount);
-    //     IERC20(DAI).approve(ROUTER_ADDRESS, daiAmount);
-        
-    //     // Add liquidity
-    //     (uint256 amountUSDC, uint256 amountDAI, uint256 liquidity) = 
-    //         IUniswapV2Router02(ROUTER_ADDRESS).addLiquidity(
-    //             USDC,
-    //             DAI,
-    //             usdcAmount,
-    //             daiAmount,
-    //             minUsdcAmount,
-    //             minDaiAmount,
-    //             address(this),
-    //             block.timestamp + 15
-    //         );
-            
-    //     emit LiquidityAdded(amountUSDC, amountDAI, liquidity);
-        
-    //     // Refund excess tokens to sender if any
-    //     if (amountUSDC < usdcAmount) {
-    //         IERC20(USDC).transfer(msg.sender, usdcAmount - amountUSDC);
-    //     }
-    //     if (amountDAI < daiAmount) {
-    //         IERC20(DAI).transfer(msg.sender, daiAmount - amountDAI);
-    //     }
-    // }
+//     // Refund excess tokens to sender if any
+//     if (amountUSDC < usdcAmount) {
+//         IERC20(USDC).transfer(msg.sender, usdcAmount - amountUSDC);
+//     }
+//     if (amountDAI < daiAmount) {
+//         IERC20(DAI).transfer(msg.sender, daiAmount - amountDAI);
+//     }
+// }
