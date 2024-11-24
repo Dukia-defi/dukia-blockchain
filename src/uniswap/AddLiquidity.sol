@@ -2,9 +2,9 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-// import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 // import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router.sol";
-import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
+import "../../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 
 // interface IUniswapV2Router02 {
 //     function addLiquidity(
@@ -23,7 +23,7 @@ import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 //     function WETH() external pure returns (address);
 // }
 
-contract AddLiquidity {
+contract AddLiquidity is Ownable(msg.sender)  {
     // Uniswap V2 Router address
     address public immutable ROUTER_ADDRESS;
 
@@ -36,7 +36,7 @@ contract AddLiquidity {
 
     event TokensWithdrawn(address token, address to, uint256 amount);
 
-    constructor(address _routerAddress, address _usdc, address _dai) Ownable(msg.sender) {
+    constructor(address _routerAddress, address _usdc, address _dai) {
         ROUTER_ADDRESS = _routerAddress;
         USDC = _usdc;
         DAI = _dai;

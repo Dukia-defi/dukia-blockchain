@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-import "./library/SharedData.sol";
-import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-import "./library/SharedData.sol";
-import {CrossChainMessenger} from "./utils/CrossChainMessenger.sol";
+import "../library/SharedData.sol";
+import "../../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
+import "../library/SharedData.sol";
+import {CrossChainMessenger} from "../utils/CrossChainMessenger.sol";
 
 contract UniswapTest {
     error Unathorized();
@@ -40,7 +40,7 @@ contract UniswapTest {
 
         CrossChainMessenger(liskCCM).sendMessage(msg.sender, chainId, message, target);
 
-        emit TokensSwapped(msg.sender, amountIn, amountOutMin, path, to, deadline, amounts);
+        // emit TokensSwapped(msg.sender, amountIn, amountOutMin, path, to, deadline, amounts);
     }
 
     function changeTarget(address _newTarget) external {

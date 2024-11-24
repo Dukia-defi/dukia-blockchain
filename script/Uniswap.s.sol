@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import "forge-std/Script.sol";
 import "forge-std/console.sol";
 import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-import "../src/Uniswap.sol";
+import "../src/uniswap/Uniswap.sol";
 import "../src/interface/IERC20.sol";
 
 contract UniswapScript is Script {
