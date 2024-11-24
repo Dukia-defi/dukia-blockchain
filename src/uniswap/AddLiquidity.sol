@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 // import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router.sol";
-import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
+import "../../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 
 // interface IUniswapV2Router02 {
 //     function addLiquidity(

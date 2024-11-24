@@ -2,7 +2,7 @@
 pragma solidity 0.8.27;
 
 import {Script, console, console2} from "forge-std/Script.sol";
-import {AaveInteractionDelegate} from "../src/AaveInteraction.sol";
+import {AaveInteractionDelegate} from "../src/aave/AaveInteraction.sol";
 import "../src/interface/IERC20.sol";
 
 interface IVariableDebtToken {

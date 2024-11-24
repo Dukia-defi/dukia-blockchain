@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "./interface/IERC20.sol";
-import "./interface/IPool.sol";
-import "./interface/IPoolAddressesProvider.sol";
+import "../interface/IERC20.sol";
+import "../interface/IPool.sol";
+import "../interface/IPoolAddressesProvider.sol";
 
 contract AaveInteractionDelegate {
     address public owner;
