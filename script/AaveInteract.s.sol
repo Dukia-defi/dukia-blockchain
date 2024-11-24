@@ -2,7 +2,7 @@
 pragma solidity 0.8.27;
 
 import {Script, console, console2} from "forge-std/Script.sol";
-import {AaveInteraction} from "../src/AaveInteraction.sol";
+import {AaveInteractionDelegate} from "../src/AaveInteraction.sol";
 import "../src/interface/IERC20.sol";
 
 interface IVariableDebtToken {
@@ -21,15 +21,11 @@ contract AaveScript is Script {
     function run() public {
         vm.startBroadcast();
 
-        AaveInteraction hack = new AaveInteraction(0x012bAC54348C0E635dCAc9D5FB99f06F24136C9A); // deploying adding the poolprovider address
+        AaveInteractionDelegate hack = new AaveInteractionDelegate(0x012bAC54348C0E635dCAc9D5FB99f06F24136C9A); // deploying adding the poolprovider address
 
         dai.approve(address(hack), 100 ether);
         hack.supply(address(dai), 100 ether);
 
-        address debbb = hack.getVariableDebtTokenAddress(address(link));
-
-        /// just like allowance
-        IVariableDebtToken(debbb).approveDelegation(address(hack), type(uint256).max);
 
         hack.borrow(address(link), 1 ether, 2);
 
@@ -51,9 +47,9 @@ contract AaveScript is Script {
 
         hack.repay(address(link), 1 ether, 2);
 
-        address deb = hack.getAToken(address(dai));
+        // address deb = hack.getAToken(address(dai));
 
-        IAtoken(deb).approve(address(hack), type(uint256).max);
+        // IAtoken(deb).approve(address(hack), type(uint256).max);
 
         hack.withdraw(address(dai), 100 ether);
 
