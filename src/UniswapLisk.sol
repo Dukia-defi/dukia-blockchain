@@ -40,7 +40,7 @@ contract UniswapTest {
 
         CrossChainMessenger(liskCCM).sendMessage(msg.sender, chainId, message, target);
 
-        emit TokensSwapped(msg.sender, amountIn, amountOutMin, path, to, deadline, amounts);
+        // emit TokensSwapped(msg.sender, amountIn, amountOutMin, path, to, deadline, amounts);
     }
 
     function changeTarget(address _newTarget) external {
