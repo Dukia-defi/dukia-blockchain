@@ -70,14 +70,3 @@ interface IUniswapV2Router02 {
     //     uint deadline
     // ) external returns (uint[] memory amounts);
 }
-
-contract MyUniswapV2Integration {
-    address private constant UNISWAP_V2_ROUTER = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
-    IUniswapV2Router02 public uniswapRouter;
-
-    constructor() {
-        uniswapRouter = IUniswapV2Router02(UNISWAP_V2_ROUTER);
-    }
-
-    // Add more functions here for swaps and liquidity
-}

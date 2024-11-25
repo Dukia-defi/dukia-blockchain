@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import {Script, console,console2} from "forge-std/Script.sol";
+import {Script, console, console2} from "forge-std/Script.sol";
 import {AaveInteraction} from "../src/AaveInteraction.sol";
 import "../src/interface/IERC20.sol";
 
@@ -33,7 +33,7 @@ contract AaveScript is Script {
 
         hack.borrow(address(link), 1 ether, 2);
 
-       (
+        (
             uint256 totalCollateralBase,
             uint256 totalDebtBase,
             uint256 availableBorrowsBase,
@@ -48,7 +48,6 @@ contract AaveScript is Script {
         console2.log("Current Liquidation Threshold:", currentLiquidationThreshold);
         console2.log("LTV:", ltv);
         console2.log("Health Factor:", healthFactor);
-        
 
         hack.repay(address(link), 1 ether, 2);
 

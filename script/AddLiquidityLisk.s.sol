@@ -9,9 +9,9 @@ import "../src/UniswapLisk.sol";
 contract AddLiquidityLiskScript is Script {
     // Addresses for deployment
 
-    uint32 _toChainId = 11155111; 
-    uint256 usdcAmount = 2 * 10**6;
-    uint256 daiAmount = 2 * 10**18;
+    uint32 _toChainId = 11155111;
+    uint256 usdcAmount = 2 * 10 ** 6;
+    uint256 daiAmount = 2 * 10 ** 18;
     uint256 slippagePercent = 5;
 
     function run() external {
@@ -28,9 +28,3 @@ contract AddLiquidityLiskScript is Script {
         vm.stopBroadcast();
     }
 }
-
-
-
-
-
-

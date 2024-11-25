@@ -25,11 +25,11 @@ contract UniswapScript is Script {
         IERC20 usdc = IERC20(USDC);
         IERC20 dai = IERC20(DAI);
 
-        uint256 usdcAmount = 0.5 * 10**6; // 2 USDC (6 decimals)
-        uint256 daiAmount = 0.5 * 10**18; // 2 DAI (18 decimals)
+        uint256 usdcAmount = 0.5 * 10 ** 6; // 2 USDC (6 decimals)
+        uint256 daiAmount = 0.5 * 10 ** 18; // 2 DAI (18 decimals)
         uint256 slippagePercent = 50; // 0.5% slippage tolerance
         uint256 amountETHMin = 0.01 ether;
-        uint256 amountTokenMin = 99 * 10**18;
+        uint256 amountTokenMin = 99 * 10 ** 18;
 
         console.log("uniswapIntegration deployed at:", address(uniswapIntegration));
 
@@ -41,13 +41,13 @@ contract UniswapScript is Script {
         console.log("USDC:", usdcAmount);
         console.log("DAI:", daiAmount);
 
-        try uniswapIntegration.addLiquidity(USDC,DAI,usdcAmount, daiAmount, slippagePercent) {
+        try uniswapIntegration.addLiquidity(USDC, DAI, usdcAmount, daiAmount, slippagePercent) {
             console.log("Liquidity added successfully!");
         } catch Error(string memory reason) {
             console.log("Failed to add liquidity:", reason);
         }
 
-        try uniswapIntegration.addLiquidityEth(USDC,usdcAmount, amountTokenMin,amountETHMin, slippagePercent) {
+        try uniswapIntegration.addLiquidityEth(USDC, usdcAmount, amountTokenMin, amountETHMin, slippagePercent) {
             console.log("Liquidity added successfully!");
         } catch Error(string memory reason) {
             console.log("Failed to add liquidity:", reason);
@@ -59,8 +59,8 @@ contract UniswapScript is Script {
         uint256 liquidity = pairToken.balanceOf(address(this));
 
         try uniswapIntegration.removeLiquidity(
-            USDC, 
-            DAI, 
+            USDC,
+            DAI,
             liquidity,
             usdcAmount * 95 / 100,  // 5% slippage 
             daiAmount * 95 / 100   // 5% slippage
