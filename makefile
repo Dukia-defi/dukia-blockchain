@@ -21,6 +21,9 @@ hack4:
 hack5:
 	@forge script script/uniswapInteraction.s.sol:UniswapInteractionScript --rpc-url $(SEPOLIA_RPC_URL) --private-key $(SEPOLIA_PRIVATE_KEY) --broadcast -- --vvvvv --etherscan-api-key $(ETHERSCAN_API_KEY) --verify  --gas-price 6000000000
 
+hack6:
+	@forge script script/AaveInteract.s.sol:AaveScript --rpc-url $(SEPOLIA_RPC_URL) --private-key $(SEPOLIA_PRIVATE_KEY) --broadcast -- --vvvvv --etherscan-api-key $(ETHERSCAN_API_KEY) --verify  --gas-price 6000000000
+
 deploy-create:
 	@forge create src/Counter.sol:HackScript --rpc-url $(SEPOLIA_RPC_URL) --private-key $(PRIVATE_KEY) --etherscan-api-key $(ETHERSCAN_API_KEY) --verify 
 
@@ -29,6 +32,9 @@ verify:
 
 deploy:
 	@forge create  --rpc-url $(SEPOLIA_RPC_URL) --private-key $(SEPOLIA_PRIVATE_KEY) --etherscan-api-key $(ETHERSCAN_API_KEY) --verify  src/uniswap/Uniswap.sol:UniswapIntegration --constructor-args 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3
+
+deployAave:
+	@forge create  --rpc-url $(SEPOLIA_RPC_URL) --private-key $(SEPOLIA_PRIVATE_KEY) --etherscan-api-key $(ETHERSCAN_API_KEY) --verify  src/aave/AaveInteraction.sol:AaveInteractionDelegate --constructor-args 0x012bAC54348C0E635dCAc9D5FB99f06F24136C9A
 
 # fetch-interface:
 # 	@cast interface -o src/Hack.sol addy -c 84532
