@@ -2,7 +2,7 @@
 pragma solidity 0.8.26;
 
 import {Script, console, console2} from "forge-std/Script.sol";
-import {AaveLisk} from "../src/AaveLisk.sol";
+import {AaveLisk} from "../src/aave/AaveLisk.sol";
 import "../src/interface/IERC20.sol";
 
 contract AaveLiskInteract is Script {

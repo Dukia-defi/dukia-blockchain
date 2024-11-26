@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-import "./library/SharedData.sol";
-import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-import "./library/SharedData.sol";
-import {CrossChainMessenger} from "./utils/CrossChainMessenger.sol";
+import "../library/SharedData.sol";
+import "../../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
+import "../library/SharedData.sol";
+import {CrossChainMessenger} from "../utils/CrossChainMessenger.sol";
 
 contract UniswapTest {
     error Unathorized();

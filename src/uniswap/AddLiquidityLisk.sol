@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-import "./interface/IPool.sol";
-import "./library/SharedData.sol";
-import {CrossChainMessenger} from "./utils/CrossChainMessenger.sol";
+import "../interface/IPool.sol";
+import "../library/SharedData.sol";
+import {CrossChainMessenger} from "../utils/CrossChainMessenger.sol";
 
 interface IUniswapV2Router {
     function addLiquidity(

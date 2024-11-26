@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+
+// pragma solidity ^0.8.19;
 
 // import "forge-std/Script.sol";
 // import "forge-std/console.sol";
@@ -70,12 +70,13 @@ pragma solidity ^0.8.19;
 //     }
 // }
 
+/// ----------------------- FIX IT ---------------------------------
 
 
-import "forge-std/Script.sol";
-import "forge-std/console.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
+// import "forge-std/Script.sol";
+// import "forge-std/console.sol";
+// import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+// import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 
 // contract SwapTokensScript is Script {
 //     address constant ROUTER_ADDRESS = 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3;

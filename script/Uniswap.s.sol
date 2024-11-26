@@ -4,13 +4,13 @@ pragma solidity ^0.8.26;
 import "forge-std/Script.sol";
 import "forge-std/console.sol";
 import "../lib/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-import "../src/Uniswap.sol";
+import "../src/uniswap/Uniswap.sol";
 import "../src/interface/IERC20.sol";
 
 contract UniswapScript is Script {
     address constant ROUTER_ADDRESS = 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3;
-    address constant USDC = 0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238; // 0x7Fc21ceb0C5003576ab5E101eB240c2b822c95d2
-    address constant DAI = 0x68194a729C2450ad26072b3D33ADaCbcef39D574; //0x3e622317f8C93f7328350cF0B56d9eD4C620C5d6
+    address constant USDC = 0xb3152168002De2FC461935a93F489f8267ee85aB; // 0x7Fc21ceb0C5003576ab5E101eB240c2b822c95d2
+    address constant DAI = 0xb3152168002De2FC461935a93F489f8267ee85aB; //0x3e622317f8C93f7328350cF0B56d9eD4C620C5d6
     address constant WETH = 0x7b79995e5F793A07bc00C7c19C34e753eB6e08Fd;
 
     UniswapIntegration public uniswapIntegration;
