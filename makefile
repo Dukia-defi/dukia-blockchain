@@ -16,7 +16,7 @@ hack3:
 	@forge script script/AddLiquidityLisk.s.sol:AddLiquidityLiskScript --rpc-url $(LISK_RPC_URL) --private-key $(LISK_PRIVATE_KEY) --broadcast -- --vvvvv --gas-price 6000000000
 
 hack4:
-	@forge script script/Uniswap.s.sol:UniswapScript --rpc-url $(SEPOLIA_RPC_URL) --private-key $(SEPOLIA_PRIVATE_KEY) --broadcast -- --vvvvv --etherscan-api-key $(ETHERSCAN_API_KEY) --verify  --gas-price 6000000000
+	@forge script script/Uniswap.s.sol:UniswapScript --rpc-url $(SEPOLIA_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast -- --vvvvv --etherscan-api-key $(ETHERSCAN_API_KEY) --verify  --gas-price 6000000000
 
 deploy-create:
 	@forge create src/Counter.sol:HackScript --rpc-url $(SEPOLIA_RPC_URL) --private-key $(PRIVATE_KEY) --etherscan-api-key $(ETHERSCAN_API_KEY) --verify 

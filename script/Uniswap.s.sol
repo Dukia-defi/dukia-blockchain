@@ -26,7 +26,7 @@ contract UniswapScript is Script {
         IERC20 dai = IERC20(DAI);
 
         uint256 usdcAmount = 0.5 * 10 ** 6; // 2 USDC (6 decimals)
-        uint256 daiAmount = 0.5 * 10 ** 18; // 2 DAI (18 decimals)
+        uint256 daiAmount = 1 ether; // 2 DAI (18 decimals)
         uint256 slippagePercent = 50; // 0.5% slippage tolerance
         uint256 amountETHMin = 0.01 ether;
         uint256 amountTokenMin = 99 * 10 ** 18;
