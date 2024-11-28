@@ -10,6 +10,9 @@ interface IAaveInteraction {
     function supply(address asset, uint256 amount) external;
     function getVariableDebtTokenAddress(address asset) external view returns (address);
     function borrow(address asset, uint256 amount, uint256 interestRateMode) external;
+    function repay(address tokenAddress, uint256 amount, uint256 interestRateMode) external;
+    function withdraw(address tokenAddress, uint256 amount) external;
+    function getAToken(address asset) external view returns (address);
     function getUserAccountData(address user)
         external
         view
@@ -44,17 +47,17 @@ contract AaveScript is Script {
         IAaveInteraction hack = IAaveInteraction(0x560B163A0FBcC293E082Df70Cc6b26B655C99d36);
 
 
-        dai.approve(address(hack), 100 ether);
-        hack.supply(address(dai), 100 ether);
+        // dai.approve(address(hack), 100 ether);
+        // hack.supply(address(dai), 100 ether);
 
-        address debbb = hack.getVariableDebtTokenAddress(address(link));
+        // address debbb = hack.getVariableDebtTokenAddress(address(link));
 
-        console2.log("Address:", debbb);
+        // console2.log("Address:", debbb);
 
-        /// just like allowance
-        IVariableDebtToken(debbb).approveDelegation(address(hack), type(uint256).max);
+        // /// just like allowance
+        // IVariableDebtToken(debbb).approveDelegation(address(hack), type(uint256).max);
 
-        hack.borrow(address(link), 1 ether, 2);
+        // hack.borrow(address(link), 1 ether, 2);
 
         (
             uint256 totalCollateralBase,
@@ -72,13 +75,13 @@ contract AaveScript is Script {
         console2.log("LTV:", ltv);
         console2.log("Health Factor:", healthFactor);
 
-        // hack.repay(address(link), 1 ether, 2);
+        hack.repay(address(link), 1 ether, 2);
 
-        // address deb = hack.getAToken(address(dai));
+        address deb = hack.getAToken(address(dai));
 
-        // IAtoken(deb).approve(address(hack), type(uint256).max);
+        IAtoken(deb).approve(address(hack), type(uint256).max);
 
-        // hack.withdraw(address(dai), 100 ether);
+        hack.withdraw(address(dai), 100 ether);
 
         vm.stopBroadcast();
     }
